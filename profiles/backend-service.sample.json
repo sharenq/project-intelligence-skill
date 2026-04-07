@@ -1,0 +1,63 @@
+{
+  "project_name": "sample-backend-service",
+  "description": "一個典型的後端 API 服務，提供 RESTful 端點",
+  "tech_stack": {
+    "languages": ["TypeScript"],
+    "frameworks": ["Express"],
+    "infrastructure": ["PostgreSQL", "Redis"]
+  },
+  "modules": [
+    {
+      "name": "api",
+      "description": "HTTP 路由與請求處理",
+      "keywords": ["route", "controller", "endpoint", "handler", "middleware"],
+      "important_paths": ["src/api/", "src/routes/", "src/middleware/"]
+    },
+    {
+      "name": "services",
+      "description": "核心邏輯層",
+      "keywords": ["service", "usecase"],
+      "important_paths": ["src/services/"]
+    },
+    {
+      "name": "data-access",
+      "description": "資料存取層（repository / ORM 操作）",
+      "keywords": ["repository", "model", "query", "migration", "schema"],
+      "important_paths": ["src/models/", "src/repositories/", "migrations/"]
+    },
+    {
+      "name": "config",
+      "description": "設定與環境變數管理",
+      "keywords": ["config", "env", "secret"],
+      "important_paths": ["src/config/", ".env.example"]
+    }
+  ],
+  "domain_terms": {},
+  "risk_patterns": [
+    {
+      "name": "API 契約變更",
+      "description": "端點路由、回應格式或狀態碼的變更可能影響呼叫端",
+      "keywords": ["route", "response", "status", "endpoint", "schema"]
+    },
+    {
+      "name": "資料結構變更",
+      "description": "資料庫 schema 或 model 結構變更可能影響多個模組",
+      "keywords": ["migration", "column", "field", "table", "index"]
+    },
+    {
+      "name": "認證與授權",
+      "description": "認證機制的變更是高敏感操作",
+      "keywords": ["auth", "token", "session", "permission", "role"]
+    },
+    {
+      "name": "副作用操作",
+      "description": "寫入、刪除、發送通知等不可逆操作",
+      "keywords": ["delete", "remove", "send", "notify", "write", "update"]
+    }
+  ],
+  "analysis_preferences": {
+    "focus": ["behavior", "impact", "risk", "security"],
+    "ignore_paths": ["node_modules", "dist", "coverage", ".git"],
+    "output_language": "zh-TW"
+  }
+}

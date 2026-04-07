@@ -1,0 +1,115 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Project Profile",
+  "description": "描述軟體專案的最小必要上下文，供分析引擎理解專案結構與偏好",
+  "type": "object",
+  "required": ["project_name"],
+  "properties": {
+    "project_name": {
+      "type": "string",
+      "description": "專案名稱"
+    },
+    "description": {
+      "type": "string",
+      "description": "專案簡述（一到兩句話）"
+    },
+    "tech_stack": {
+      "type": "object",
+      "description": "技術棧摘要",
+      "properties": {
+        "languages": {
+          "type": "array",
+          "items": { "type": "string" }
+        },
+        "frameworks": {
+          "type": "array",
+          "items": { "type": "string" }
+        },
+        "infrastructure": {
+          "type": "array",
+          "items": { "type": "string" },
+          "description": "資料庫、訊息佇列、雲端服務等"
+        }
+      },
+      "additionalProperties": false
+    },
+    "modules": {
+      "type": "array",
+      "description": "專案中值得關注的模組或邏輯區域",
+      "items": {
+        "type": "object",
+        "required": ["name"],
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          },
+          "keywords": {
+            "type": "array",
+            "items": { "type": "string" },
+            "description": "與此模組相關的關鍵字，用於匹配 diff 內容"
+          },
+          "important_paths": {
+            "type": "array",
+            "items": { "type": "string" },
+            "description": "此模組的重要檔案路徑或目錄"
+          }
+        },
+        "additionalProperties": false
+      }
+    },
+    "domain_terms": {
+      "type": "object",
+      "description": "專案中有特殊意義的術語。key 為術語，value 為解釋",
+      "additionalProperties": {
+        "type": "string"
+      }
+    },
+    "risk_patterns": {
+      "type": "array",
+      "description": "此專案中特別需要關注的風險模式",
+      "items": {
+        "type": "object",
+        "required": ["name", "keywords"],
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          },
+          "keywords": {
+            "type": "array",
+            "items": { "type": "string" }
+          }
+        },
+        "additionalProperties": false
+      }
+    },
+    "analysis_preferences": {
+      "type": "object",
+      "description": "分析偏好設定",
+      "properties": {
+        "focus": {
+          "type": "array",
+          "items": { "type": "string" },
+          "description": "分析時優先關注的面向（如 behavior, impact, risk, performance, security）"
+        },
+        "ignore_paths": {
+          "type": "array",
+          "items": { "type": "string" },
+          "description": "分析時忽略的路徑"
+        },
+        "output_language": {
+          "type": "string",
+          "description": "輸出語言（如 zh-TW, en）",
+          "default": "zh-TW"
+        }
+      },
+      "additionalProperties": false
+    }
+  },
+  "additionalProperties": false
+}

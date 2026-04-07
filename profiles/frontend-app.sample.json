@@ -1,0 +1,58 @@
+{
+  "project_name": "sample-frontend-app",
+  "description": "一個典型的前端單頁應用",
+  "tech_stack": {
+    "languages": ["TypeScript"],
+    "frameworks": ["React"],
+    "infrastructure": []
+  },
+  "modules": [
+    {
+      "name": "components",
+      "description": "UI 元件",
+      "keywords": ["component", "ui", "render", "props"],
+      "important_paths": ["src/components/"]
+    },
+    {
+      "name": "state",
+      "description": "狀態管理",
+      "keywords": ["store", "state", "reducer", "action", "slice", "atom"],
+      "important_paths": ["src/store/", "src/state/"]
+    },
+    {
+      "name": "api-client",
+      "description": "API 呼叫與資料取得",
+      "keywords": ["api", "fetch", "request", "query", "hook"],
+      "important_paths": ["src/api/", "src/hooks/"]
+    },
+    {
+      "name": "routing",
+      "description": "頁面路由與導航",
+      "keywords": ["route", "page", "navigate", "path"],
+      "important_paths": ["src/pages/", "src/routes/"]
+    }
+  ],
+  "domain_terms": {},
+  "risk_patterns": [
+    {
+      "name": "狀態管理變更",
+      "description": "全域狀態結構的變更可能影響多個元件",
+      "keywords": ["store", "state", "reducer", "dispatch", "context"]
+    },
+    {
+      "name": "路由變更",
+      "description": "路由路徑或導航邏輯的變更可能影響 deep link 和使用者流程",
+      "keywords": ["route", "path", "navigate", "redirect"]
+    },
+    {
+      "name": "API 介面變更",
+      "description": "API 呼叫方式或回應處理邏輯的變更",
+      "keywords": ["fetch", "request", "response", "endpoint", "api"]
+    }
+  ],
+  "analysis_preferences": {
+    "focus": ["behavior", "impact", "risk"],
+    "ignore_paths": ["node_modules", "dist", "build", "coverage", ".git", "public"],
+    "output_language": "zh-TW"
+  }
+}

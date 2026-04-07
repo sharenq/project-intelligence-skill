@@ -1,0 +1,58 @@
+{
+  "project_name": "sample-monorepo",
+  "description": "一個包含多個套件的 monorepo 專案",
+  "tech_stack": {
+    "languages": ["TypeScript"],
+    "frameworks": [],
+    "infrastructure": []
+  },
+  "modules": [
+    {
+      "name": "shared-libs",
+      "description": "跨套件共用的程式庫",
+      "keywords": ["shared", "common", "utils", "lib"],
+      "important_paths": ["packages/shared/", "packages/common/", "libs/"]
+    },
+    {
+      "name": "app-a",
+      "description": "應用 A（具體職責待確認）",
+      "keywords": [],
+      "important_paths": ["apps/app-a/", "packages/app-a/"]
+    },
+    {
+      "name": "app-b",
+      "description": "應用 B（具體職責待確認）",
+      "keywords": [],
+      "important_paths": ["apps/app-b/", "packages/app-b/"]
+    },
+    {
+      "name": "build-config",
+      "description": "建置設定與工具鏈",
+      "keywords": ["build", "config", "webpack", "vite", "turbo", "nx"],
+      "important_paths": ["turbo.json", "nx.json", "tsconfig.base.json"]
+    }
+  ],
+  "domain_terms": {},
+  "risk_patterns": [
+    {
+      "name": "共用程式庫變更",
+      "description": "shared/common 套件的變更可能影響所有依賴它的應用",
+      "keywords": ["shared", "common", "utils", "lib"]
+    },
+    {
+      "name": "建置設定變更",
+      "description": "build config 的變更可能影響所有套件的建置結果",
+      "keywords": ["build", "config", "tsconfig", "webpack", "vite", "turbo", "nx"]
+    },
+    {
+      "name": "跨套件依賴變更",
+      "description": "套件間依賴關係的變更可能導致版本衝突或建置失敗",
+      "keywords": ["dependency", "workspace", "package.json", "version"]
+    }
+  ],
+  "analysis_preferences": {
+    "focus": ["impact", "risk"],
+    "ignore_paths": ["node_modules", "dist", "build", ".git", "coverage", ".turbo", ".nx"],
+    "output_language": "zh-TW"
+  }
+}

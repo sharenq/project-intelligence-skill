@@ -1,0 +1,14 @@
+# OS
+.DS_Store
+Thumbs.db
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# Project-specific runtime
+profiles/*.json
+!profiles/*.sample.json
+knowledge/projects/
