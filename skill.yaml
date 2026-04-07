@@ -1,5 +1,5 @@
 name: project-intelligence
-version: 0.1.0
+version: 0.2.0
 description: 通用型 AI 專案理解 skill — 結構化分析任何軟體專案的變更意圖、影響範圍與風險
 author: sharenq
 
@@ -7,17 +7,24 @@ author: sharenq
 prompts:
   core-analyzer: prompts/system/core-analyzer.md
   profile-generator: prompts/system/profile-generator.md
+  knowledge-merger: prompts/system/knowledge-merger.md
+  orchestrator: prompts/system/orchestrator.md
 
 modes:
   memory: modes/memory.md
   review: modes/review.md
   risk: modes/risk.md
+  doc: modes/doc.md
+  onboarding: modes/onboarding.md
+  refactor: modes/refactor.md
 
 schemas:
   project-profile: schemas/project-profile.schema.json
   analysis-result: schemas/analysis-result.schema.json
+  knowledge-entry: schemas/knowledge-entry.schema.json
 
 profiles_dir: profiles/
+knowledge_dir: knowledge/
 
 # 預設設定
 defaults:

@@ -41,13 +41,26 @@ cp profiles/backend-service.sample.json profiles/my-project.json
 
 **Review 模式（預設）**— 專案感知型程式碼審查：
 > 請使用 project-intelligence 的 review mode，分析這次的 git diff。
-> Profile: [貼上或指向你的 profile]
 
 **Risk 模式** — 回歸風險與影響範圍分析：
 > 請使用 project-intelligence 的 risk mode，分析這次變更的風險。
 
 **Memory 模式** — 萃取可沉澱的知識：
 > 請使用 project-intelligence 的 memory mode，從這次分析中提取值得記住的知識。
+
+**Doc 模式** — 生成技術文件草稿：
+> 請使用 project-intelligence 的 doc mode，為這個模組生成說明文件。
+
+**Onboarding 模式** — 新人引導指南：
+> 請使用 project-intelligence 的 onboarding mode，生成專案入門指南。
+
+**Refactor 模式** — 重構機會分析：
+> 請使用 project-intelligence 的 refactor mode，分析這個模組的重構機會。
+
+**複合指令** — 不確定用哪個 mode？直接描述需求：
+> 請使用 project-intelligence 幫我全面分析這次 PR。
+
+Orchestrator 會自動決定執行哪些 mode 以及順序。
 
 ### 3. 取得結構化輸出
 
@@ -72,22 +85,34 @@ cp profiles/backend-service.sample.json profiles/my-project.json
 
 ```
 project-intelligence-skill/
-├── README.md                          ← 你正在讀的文件
-├── skill.yaml                         ← Skill 定義與設定
+├── README.md                              ← 你正在讀的文件
+├── skill.yaml                             ← Skill 定義與設定
 ├── prompts/system/
-│   ├── core-analyzer.md               ← 核心分析引擎（所有 mode 共用）
-│   └── profile-generator.md           ← Profile 自動生成器
+│   ├── core-analyzer.md                   ← 核心分析引擎（所有 mode 共用）
+│   ├── profile-generator.md               ← Profile 自動生成器
+│   ├── knowledge-merger.md                ← 知識合併引擎
+│   └── orchestrator.md                    ← 編排層（多步驟流程控制）
 ├── schemas/
-│   ├── project-profile.schema.json    ← Profile 結構定義
-│   └── analysis-result.schema.json    ← 分析結果結構定義
+│   ├── project-profile.schema.json        ← Profile 結構定義
+│   ├── analysis-result.schema.json        ← 分析結果結構定義
+│   └── knowledge-entry.schema.json        ← 知識條目結構定義
 ├── modes/
-│   ├── memory.md                      ← 知識沉澱模式
-│   ├── review.md                      ← 程式碼審查模式
-│   └── risk.md                        ← 風險分析模式
+│   ├── memory.md                          ← 知識沉澱模式
+│   ├── review.md                          ← 程式碼審查模式
+│   ├── risk.md                            ← 風險分析模式
+│   ├── doc.md                             ← 文件生成模式
+│   ├── onboarding.md                      ← 新人引導模式
+│   └── refactor.md                        ← 重構分析模式
+├── knowledge/
+│   ├── global/                            ← 全域知識（跨專案通用）
+│   └── projects/                          ← 各專案沉澱的知識
+├── ci/
+│   ├── github-actions.yml                 ← GitHub Actions 整合範例
+│   └── README.md                          ← CI 整合指南
 └── profiles/
-    ├── backend-service.sample.json    ← 後端服務範例
-    ├── frontend-app.sample.json       ← 前端應用範例
-    └── monorepo.sample.json           ← Monorepo 範例
+    ├── backend-service.sample.json        ← 後端服務範例
+    ├── frontend-app.sample.json           ← 前端應用範例
+    └── monorepo.sample.json               ← Monorepo 範例
 ```
 
 ---
@@ -158,7 +183,95 @@ Profile 是分析引擎理解你專案的關鍵。但它不需要一步到位。
 ### memory
 **用途**：知識沉澱
 
-從分析結果中萃取值得長期保留的知識片段（行為規則、架構決策、已知陷阱）。適合在完成重要功能或修復後使用。
+從分析結果中萃取值得長期保留的知識片段（行為規則、架構決策、已知陷阱）。搭配 Knowledge Merger 使用，可持續累積專案知識。
+
+### doc
+**用途**：技術文件生成
+
+根據程式碼分析產出對團隊有實際幫助的文件草稿。支援模組說明、架構概覽、變更說明、功能指南等文件類型。產出的文件會標記哪些段落需要人工確認。
+
+### onboarding
+**用途**：新人引導
+
+為剛加入專案的工程師生成入門指南，包含專案全貌、建議閱讀順序、專案慣例、常見陷阱和開發環境設定。
+
+### refactor
+**用途**：重構機會分析
+
+識別程式碼中的結構問題（職責混雜、過度耦合、重複邏輯等），按影響/風險/工作量/價值四個維度排序，提供具體的重構策略和安全評估。
+
+---
+
+## 知識管理
+
+### 知識沉澱流程
+
+```
+程式碼分析（memory mode）
+    ↓
+產出 memory_entries
+    ↓
+Knowledge Merger 比對既有知識庫
+    ↓
+去重、合併、標記衝突
+    ↓
+沉澱到 knowledge/ 目錄
+```
+
+### 知識條目類型
+
+| 類型 | 說明 |
+|------|------|
+| `behavioral_rule` | 程式碼中觀察到的行為規則 |
+| `architecture_decision` | 架構決策記錄 |
+| `known_pitfall` | 已知的陷阱或容易出錯的地方 |
+| `pattern` | 專案中的重複模式 |
+| `glossary_term` | 專案術語定義 |
+
+### 知識生命週期
+
+每條知識有 `durability`（有效期）和 `status`（狀態）：
+
+- **新知識**進入時狀態為 `unverified`
+- 經人工確認後標記為 `active`
+- 被新知識取代後標記為 `superseded`
+- 過期或不再適用時標記為 `deprecated`
+
+Knowledge Merger 會自動檢查過期候選並建議處理。
+
+---
+
+## 編排層（Orchestrator）
+
+當你的需求涉及多個分析步驟時，Orchestrator 會自動規劃執行流程。
+
+### 常見流程
+
+| 需求 | 自動規劃的流程 |
+|------|--------------|
+| 全面理解專案 | profile-generator → onboarding mode |
+| 分析 PR | review mode ∥ risk mode → memory mode → knowledge-merger |
+| 重構評估 | refactor mode → risk mode |
+| 知識沉澱 | memory mode → knowledge-merger |
+| 完整分析循環 | review ∥ risk → memory → knowledge-merger |
+
+`∥` 表示可平行執行。
+
+### 直接使用
+
+大多數情況下你不需要手動呼叫 Orchestrator。直接描述你的需求，AI 會自動判斷是否需要多步驟執行。
+
+---
+
+## CI 整合
+
+Project Intelligence 可以整合到 CI/CD 流程中，在 PR 建立時自動執行分析。
+
+詳見 `ci/README.md`，包含：
+- GitHub Actions 範例（`ci/github-actions.yml`）
+- 整合架構說明
+- 觸發策略建議
+- 成本控制建議
 
 ---
 
@@ -207,19 +320,6 @@ Profile: profiles/backend-service.sample.json
   ]
 }
 ```
-
----
-
-## 延後項目（不在 v0.1 範圍）
-
-以下功能已規劃但不在第一版：
-
-- doc mode（文件生成）
-- onboarding mode（新人引導）
-- refactor mode（重構分析）
-- 自動知識合併
-- CI 整合
-- 編排層（orchestration）
 
 ---
 

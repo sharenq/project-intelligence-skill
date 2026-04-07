@@ -1,0 +1,69 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Knowledge Entry",
+  "description": "知識庫中的單一知識條目，由 memory mode 產出，經知識合併後沉澱",
+  "type": "object",
+  "required": ["id", "type", "title", "content", "confidence", "created_at"],
+  "properties": {
+    "id": {
+      "type": "string",
+      "description": "唯一識別碼（建議格式：{type}-{timestamp}-{short_hash}）"
+    },
+    "type": {
+      "type": "string",
+      "enum": ["behavioral_rule", "architecture_decision", "known_pitfall", "pattern", "glossary_term"],
+      "description": "知識類型"
+    },
+    "title": {
+      "type": "string",
+      "description": "簡短標題"
+    },
+    "content": {
+      "type": "string",
+      "description": "知識的詳細描述"
+    },
+    "scope": {
+      "type": "string",
+      "description": "適用範圍（模組名、全域等）"
+    },
+    "confidence": {
+      "type": "string",
+      "enum": ["low", "medium", "high"],
+      "description": "知識的信心程度"
+    },
+    "evidence": {
+      "type": "string",
+      "description": "支持此知識的依據（程式碼位置、commit hash 等）"
+    },
+    "durability": {
+      "type": "string",
+      "enum": ["long_term", "medium_term", "short_term"],
+      "description": "預估有效期"
+    },
+    "tags": {
+      "type": "array",
+      "items": { "type": "string" },
+      "description": "用於搜尋和分類的標籤"
+    },
+    "supersedes": {
+      "type": "string",
+      "description": "如果此條目取代了舊條目，填入被取代條目的 id"
+    },
+    "status": {
+      "type": "string",
+      "enum": ["active", "superseded", "deprecated", "unverified"],
+      "description": "條目狀態",
+      "default": "unverified"
+    },
+    "created_at": {
+      "type": "string",
+      "format": "date-time",
+      "description": "建立時間"
+    },
+    "source": {
+      "type": "string",
+      "description": "產出此知識的來源（如 commit hash、分析 session 等）"
+    }
+  },
+  "additionalProperties": false
+}

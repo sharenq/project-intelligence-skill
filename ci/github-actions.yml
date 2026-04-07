@@ -1,0 +1,92 @@
+# Project Intelligence — GitHub Actions CI 整合範例
+#
+# 此 workflow 在 PR 建立或更新時，自動執行 project-intelligence 分析。
+# 需要搭配能執行 AI prompt 的 CI runner（如 Claude Code CLI）。
+#
+# 使用前請確認：
+# 1. CI 環境有 AI 執行能力（ANTHROPIC_API_KEY 或 Claude Code CLI）
+# 2. 專案根目錄有 project-intelligence-skill/ 或透過 git submodule 引入
+# 3. profiles/ 目錄中有對應此專案的 profile JSON
+
+name: Project Intelligence Analysis
+
+on:
+  pull_request:
+    types: [opened, synchronize]
+
+permissions:
+  contents: read
+  pull-requests: write
+
+env:
+  PROFILE_PATH: project-intelligence-skill/profiles/my-project.json
+
+jobs:
+  analyze-pr:
+    name: Analyze PR Changes
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0  # 需要完整歷史以計算 diff
+
+      - name: Generate diff
+        id: diff
+        run: |
+          BASE_SHA=${{ github.event.pull_request.base.sha }}
+          HEAD_SHA=${{ github.event.pull_request.head.sha }}
+          git diff "$BASE_SHA..$HEAD_SHA" > /tmp/pr-diff.patch
+          echo "diff_file=/tmp/pr-diff.patch" >> "$GITHUB_OUTPUT"
+
+      - name: Run review analysis
+        id: review
+        run: |
+          # ============================================================
+          # 此步驟需要根據你的 AI 執行環境調整
+          #
+          # 方案 A：使用 Claude Code CLI
+          #   claude-code --prompt "$(cat project-intelligence-skill/prompts/system/core-analyzer.md)
+          #     Mode: $(cat project-intelligence-skill/modes/review.md)
+          #     Profile: $(cat $PROFILE_PATH)
+          #     Diff: $(cat /tmp/pr-diff.patch)" \
+          #     --output-format json > /tmp/review-result.json
+          #
+          # 方案 B：使用 Anthropic API
+          #   見 ci/scripts/run-analysis.sh
+          #
+          # 方案 C：使用自訂 wrapper
+          #   your-ai-cli analyze \
+          #     --prompt project-intelligence-skill/prompts/system/core-analyzer.md \
+          #     --mode project-intelligence-skill/modes/review.md \
+          #     --profile $PROFILE_PATH \
+          #     --input /tmp/pr-diff.patch
+          # ============================================================
+          echo "請根據你的 AI 執行環境配置此步驟"
+
+      - name: Run risk analysis
+        id: risk
+        run: |
+          # 同上，使用 risk mode
+          # --mode project-intelligence-skill/modes/risk.md
+          echo "請根據你的 AI 執行環境配置此步驟"
+
+      - name: Post results to PR
+        if: always()
+        run: |
+          # 將分析結果以 PR comment 形式發布
+          #
+          # 範例（假設結果在 /tmp/review-result.json）：
+          #   SUMMARY=$(jq -r '.summary' /tmp/review-result.json)
+          #   RISKS=$(jq -r '.risks[] | "- [\(.severity)] \(.title)"' /tmp/review-result.json)
+          #
+          #   gh pr comment ${{ github.event.pull_request.number }} --body "
+          #   ## Project Intelligence Analysis
+          #
+          #   ### Summary
+          #   ${SUMMARY}
+          #
+          #   ### Risks
+          #   ${RISKS}
+          #   "
+          echo "請根據你的需求配置結果發布方式"

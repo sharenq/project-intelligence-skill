@@ -142,5 +142,12 @@ Core Analyzer 是基礎分析引擎。不同 mode 會額外要求特定面向的
 - **memory mode**：額外要求產出可沉澱的知識摘要
 - **review mode**：額外要求聚焦在可改善的問題點
 - **risk mode**：額外要求深入分析回歸風險與測試建議
+- **doc mode**：額外要求產出可用的技術文件草稿
+- **onboarding mode**：額外要求產出新人導覽指南
+- **refactor mode**：額外要求識別重構機會與安全評估
 
 mode 的具體指示會在 `mode_specific` 區塊中補充。Core Analyzer 的基礎分析步驟在所有 mode 下都必須完整執行。
+
+## 編排層
+
+當使用者的需求涉及多個 mode 或多步驟流程時，由 Orchestrator（`prompts/system/orchestrator.md`）負責決定執行順序與組合方式。Core Analyzer 本身只處理單次分析，不負責跨步驟的流程控制。
