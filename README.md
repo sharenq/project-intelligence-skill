@@ -162,6 +162,39 @@ Profile 是分析引擎理解你專案的關鍵。但它不需要一步到位。
 | 4 | `domain_terms` | 讓分析理解專案特有術語 |
 | 5 | `analysis_preferences` | 微調分析行為 |
 
+### 撰寫有效的 risk_patterns
+
+好的 risk_patterns 讓分析引擎知道你的專案「特別在意什麼」。以下是不同技術形態的範例：
+
+**有狀態的後端服務**：
+```json
+{
+  "name": "狀態轉換邏輯",
+  "description": "任何影響狀態機或狀態轉換的變更",
+  "keywords": ["state", "status", "transition", "machine", "workflow"]
+}
+```
+
+**有外部整合的系統**：
+```json
+{
+  "name": "外部介面契約",
+  "description": "對外 API 回應格式或 webhook payload 的變更可能影響整合方",
+  "keywords": ["response", "payload", "webhook", "callback", "schema", "contract"]
+}
+```
+
+**有非同步處理的系統**：
+```json
+{
+  "name": "非同步行為變更",
+  "description": "佇列、排程、事件處理的變更可能產生時序問題",
+  "keywords": ["queue", "job", "worker", "event", "async", "schedule", "cron"]
+}
+```
+
+關鍵原則：risk_patterns 描述的是**你的專案特別需要注意的變更類型**，不是通用的程式碼品質規則。
+
 ### 用 Profile Generator 自動生成
 
 提供 README、目錄樹、或依賴檔給 profile-generator，它會生成初始 Profile 並標記哪些部分需要人工確認。

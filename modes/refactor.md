@@ -31,6 +31,7 @@ Refactor mode 不是自動重構工具，而是「幫你看出哪裡值得重構
 | 深層嵌套 | 超過 4 層的條件 / 迴圈嵌套 |
 | 命名不一致 | 同一概念在不同地方用不同名稱 |
 | 抽象洩漏 | 高層模組直接操作低層實作細節 |
+| 抽象層級不一致 | 同一函式或模組中混合了不同抽象層級的操作（如高層流程控制與低層字串處理並存） |
 
 ### 2. 重構機會排序
 
@@ -45,7 +46,7 @@ Refactor mode 不是自動重構工具，而是「幫你看出哪裡值得重構
 
 每個重構機會都要提供：
 - 問題是什麼
-- 建議的重構策略（Extract Method、Move Module、Introduce Interface 等）
+- 建議的重構策略，對應經典重構模式（Extract Method、Extract Class、Move Module、Introduce Interface、Introduce Parameter Object、Replace Conditional with Polymorphism、Pull Up / Push Down 等）
 - 重構步驟的概要
 - 重構前應確保的測試覆蓋
 - 可能的風險
@@ -68,7 +69,7 @@ Refactor mode 不是自動重構工具，而是「幫你看出哪裡值得重構
     "refactor_opportunities": [
       {
         "title": "重構機會標題",
-        "problem_type": "mixed_responsibility | tight_coupling | duplication | oversized_unit | deep_nesting | naming_inconsistency | leaky_abstraction",
+        "problem_type": "mixed_responsibility | tight_coupling | duplication | oversized_unit | deep_nesting | naming_inconsistency | leaky_abstraction | abstraction_inconsistency",
         "location": "檔案路徑或程式碼位置",
         "description": "問題描述",
         "strategy": "建議的重構策略",

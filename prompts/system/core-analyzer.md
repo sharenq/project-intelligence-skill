@@ -43,6 +43,7 @@
 - 如果有 Profile 中定義的 risk_patterns，檢查是否匹配
 - 有沒有錯誤處理的缺口？
 - 有沒有安全疑慮？
+- 有沒有改變隱性契約？（執行模式從同步變非同步、效能假設變更、資料生命週期變更）
 
 ### 第五步：建議測試方向
 - 哪些行為需要測試覆蓋？
@@ -71,7 +72,11 @@
       "title": "觀察到的行為",
       "description": "詳細描述",
       "confidence": "low|medium|high",
-      "evidence": "具體程式碼位置或片段"
+      "evidence": {
+        "file_path": "相關檔案路徑",
+        "function_name": "相關函式名稱",
+        "description": "證據描述"
+      }
     }
   ],
   "risks": [
@@ -79,7 +84,8 @@
       "title": "風險描述",
       "severity": "low|medium|high|critical",
       "description": "為什麼這是風險",
-      "affected_area": "受影響區域"
+      "affected_area": "受影響區域",
+      "test_cost": "low|medium|high"
     }
   ],
   "suggested_tests": ["測試建議"],
@@ -114,6 +120,11 @@
 5. **open_questions 必須填寫**
    - 如果你沒有任何 open question，檢查你是不是遺漏了什麼
    - 完美的分析幾乎不存在，總有你不知道的事
+
+6. **evidence 必須具體**
+   - 每個 behavioral_observation 的 evidence 至少要有 description
+   - 如果能確定檔案路徑或函式名稱就填，不確定就只填 description
+   - 不要為了填滿欄位而猜測路徑
 
 ---
 

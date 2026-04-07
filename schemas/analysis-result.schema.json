@@ -41,8 +41,24 @@
             "enum": ["low", "medium", "high"]
           },
           "evidence": {
-            "type": "string",
-            "description": "支持此觀察的具體程式碼片段或位置"
+            "type": "object",
+            "description": "支持此觀察的具體證據",
+            "properties": {
+              "file_path": {
+                "type": "string",
+                "description": "相關檔案路徑"
+              },
+              "function_name": {
+                "type": "string",
+                "description": "相關函式或方法名稱"
+              },
+              "description": {
+                "type": "string",
+                "description": "證據描述與觀察到的關聯"
+              }
+            },
+            "required": ["description"],
+            "additionalProperties": false
           }
         },
         "additionalProperties": false
@@ -67,6 +83,11 @@
           },
           "affected_area": {
             "type": "string"
+          },
+          "test_cost": {
+            "type": "string",
+            "enum": ["low", "medium", "high"],
+            "description": "驗證此風險所需的測試成本（搭配 severity 做成本效益判斷）"
           }
         },
         "additionalProperties": false
